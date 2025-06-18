@@ -39,18 +39,32 @@ final class DIContainer {
         SearchPostUseCase(repository: makeSearchRepository())
     }
     
-    func makePostViewModel() -> some PostViewModelProtocol {
+    func makePostViewModel(actions: PostViewModelActions) -> some PostViewModelProtocol {
         let viewModel = PostViewModel(
             getPost: makeGetPostUseCase(),
-            searchPostList: makeSearchPostUseCase()
+            searchPostList: makeSearchPostUseCase(),
+            actions: actions,
+            taskManager: TaskManager()
         )
         return viewModel
     }
     
-    func makePostListViewController() -> UIViewController {
-        let viewController = PostListViewController.create(viewModel: makePostViewModel())
+    func makePostListViewController(actions: PostViewModelActions) -> UIViewController {
+        let viewController = PostListViewController(
+            viewModel: makePostViewModel(
+                actions: actions
+            )
+        )
         return viewController
     }
-
+    
+    func makePostDetailViewController(
+        post: Post
+    ) -> UIViewController {
+        let viewController = PostDetailViewController(
+            post: post
+        )
+        return viewController
+    }
 }
 
